@@ -4,29 +4,35 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>منصة إرسال بلاغ للبلدية</title>
-  <link rel="stylesheet" href="style.css">
+  
   <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+  
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
+
   <header>
     <h1>🏛️ منصة إرسال بلاغ للبلدية</h1>
     <button id="toggleDarkMode">🌙</button>
   </header>
 
   <main>
-    <section class="report-form">
-      <h2>أدخل بيانات البلاغ</h2>
-      <form id="problemForm">
-        <label>اسم المرسل:</label>
-        <input type="text" required>
+    <form id="problemForm">
+      <fieldset>
+        <legend>معلومات المُرسل</legend>
+        <label for="senderName">اسم المرسل:</label>
+        <input type="text" id="senderName" required>
 
-        <label>رقم الهاتف:</label>
-        <input type="tel" required>
+        <label for="senderPhone">رقم الهاتف:</label>
+        <input type="tel" id="senderPhone" required>
 
-        <label>البريد الإلكتروني:</label>
-        <input type="email" required>
+        <label for="senderEmail">البريد الإلكتروني:</label>
+        <input type="email" id="senderEmail" required>
+      </fieldset>
 
-        <label>نوع المشكلة:</label>
+      <fieldset>
+        <legend>تفاصيل البلاغ</legend>
+        <label for="problemType">نوع المشكلة:</label>
         <select id="problemType" required>
           <option value="">اختر نوع المشكلة</option>
           <option value="انقطاع كهرباء">انقطاع كهرباء</option>
@@ -36,33 +42,36 @@
           <option value="أخرى">أخرى</option>
         </select>
 
-        <div id="otherProblemDiv" style="display:none;">
-          <label>ما هي المشكلة؟</label>
+        <div id="otherProblemDiv">
+          <label for="otherProblemInput">ما هي المشكلة؟</label>
           <input type="text" id="otherProblemInput">
         </div>
 
-        <label>ماذا تسببت المشكلة:</label>
-        <input type="text" required>
+        <label for="problemCause">ماذا تسببت المشكلة:</label>
+        <input type="text" id="problemCause" required>
 
-        <label>وصف المشكلة:</label>
-        <textarea rows="3" required></textarea>
+        <label for="problemDescription">وصف المشكلة:</label>
+        <textarea id="problemDescription" rows="4" required></textarea>
+      </fieldset>
 
-        <label>أرفق صور:</label>
-        <input type="file" accept="image/*" multiple id="imageInput">
+      <fieldset>
+        <legend>المرفقات والموقع</legend>
+        <label for="imageInput">أرفق صور:</label>
+        <input type="file" accept="image/*" multiple id="imageInput" class="custom-file-input">
         <div id="imagePreview" class="image-preview"></div>
 
-        <label>تحديد الموقع على الخريطة:</label>
+        <label for="map">تحديد الموقع على الخريطة:</label>
         <div id="map"></div>
+      </fieldset>
 
-        <button type="submit">📨 إرسال البلاغ</button>
-      </form>
-    </section>
+      <button type="submit">📨 إرسال البلاغ</button>
+    </form>
   </main>
 
-  <!-- المودال -->
   <div id="successModal" class="modal">
     <div class="modal-content">
       <h3>✅ تم الإرسال بنجاح</h3>
+      <p>شكراً لك، سيتم مراجعة بلاغك في أقرب وقت.</p>
       <button id="closeModal">إغلاق</button>
     </div>
   </div>
