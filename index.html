@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>منصة إرسال بلاغ للبلدية</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+</head>
+<body>
+  <header>
+    <h1>🏛️ منصة إرسال بلاغ للبلدية</h1>
+    <button id="toggleDarkMode">🌙</button>
+  </header>
+
+  <main>
+    <section class="report-form">
+      <h2>أدخل بيانات البلاغ</h2>
+      <form id="problemForm">
+        <label>اسم المرسل:</label>
+        <input type="text" required>
+
+        <label>رقم الهاتف:</label>
+        <input type="tel" required>
+
+        <label>البريد الإلكتروني:</label>
+        <input type="email" required>
+
+        <label>نوع المشكلة:</label>
+        <select id="problemType" required>
+          <option value="">اختر نوع المشكلة</option>
+          <option value="انقطاع كهرباء">انقطاع كهرباء</option>
+          <option value="مشكلة مياه">مشكلة مياه</option>
+          <option value="حفريات">حفريات</option>
+          <option value="نفايات">نفايات</option>
+          <option value="أخرى">أخرى</option>
+        </select>
+
+        <div id="otherProblemDiv" style="display:none;">
+          <label>ما هي المشكلة؟</label>
+          <input type="text" id="otherProblemInput">
+        </div>
+
+        <label>ماذا تسببت المشكلة:</label>
+        <input type="text" required>
+
+        <label>وصف المشكلة:</label>
+        <textarea rows="3" required></textarea>
+
+        <label>أرفق صور:</label>
+        <input type="file" accept="image/*" multiple id="imageInput">
+        <div id="imagePreview" class="image-preview"></div>
+
+        <label>تحديد الموقع على الخريطة:</label>
+        <div id="map"></div>
+
+        <button type="submit">📨 إرسال البلاغ</button>
+      </form>
+    </section>
+  </main>
+
+  <!-- المودال -->
+  <div id="successModal" class="modal">
+    <div class="modal-content">
+      <h3>✅ تم الإرسال بنجاح</h3>
+      <button id="closeModal">إغلاق</button>
+    </div>
+  </div>
+
+  <footer>
+    <p>✍️ عمل د. محمد خليل دغامين & د. براء خميس أبو عواد & د. معتصم بالله خليل دغامين & د. سياف عادل الدارين</p>
+  </footer>
+
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
