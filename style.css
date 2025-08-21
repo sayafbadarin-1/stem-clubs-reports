@@ -1,141 +1,311 @@
+/* =================================
+   1. متغيرات التصميم والتهيئة العامة
+   ================================= */
+:root {
+  /* لوحة الألوان الأساسية */
+  --primary-color: #0077b6;
+  --secondary-color: #00b4d8;
+  --success-color: #2a9d8f;
+  --text-color: #333;
+  --background-color: #f4f8fb;
+  --form-background: #ffffff;
+  --border-color: #dde8f0;
+
+  /* أحجام الخطوط */
+  --font-family: 'Cairo', sans-serif;
+
+  /* قياسات أخرى */
+  --border-radius: 12px;
+  --box-shadow: 0 4px 25px rgba(0, 30, 60, 0.08);
+  --transition-speed: 0.3s;
+}
+
+/* تهيئة الوضع الليلي */
+body.dark {
+  --primary-color: #0096c7;
+  --secondary-color: #00b4d8;
+  --text-color: #e0e0e0;
+  --background-color: #12181f;
+  --form-background: #1e293b;
+  --border-color: #334155;
+}
+
+/* تهيئة أساسية للموقع */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
 body {
-  font-family: 'Tahoma', sans-serif;
-  background: #f0f8ff;
+  font-family: var(--font-family);
+  background-color: var(--background-color);
+  color: var(--text-color);
   margin: 0;
-  padding: 0;
-  transition: background 0.3s, color 0.3s;
+  line-height: 1.7;
+  transition: background-color var(--transition-speed), color var(--transition-speed);
 }
 
 .container {
-  max-width: 700px;
-  margin: 30px auto;
-  background: white;
-  padding: 20px;
-  border-radius: 15px;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem;
 }
 
-h1 {
+/* =================================
+   2. تصميم الهيدر والفوتر
+   ================================= */
+.site-header {
+  background-color: var(--form-background);
+  box-shadow: var(--box-shadow);
+  padding: 0.5rem 0;
+  margin-bottom: 2rem;
+  transition: background-color var(--transition-speed);
+}
+
+.header-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+.site-header h1 {
+  font-size: 1.5rem;
+  color: var(--primary-color);
+  margin: 0;
+}
+
+.site-footer {
   text-align: center;
-  color: #0077b6;
+  padding: 1.5rem;
+  margin-top: 3rem;
+  background-color: #1e293b;
+  color: #a0aec0;
+  font-size: 0.9rem;
+}
+
+body.dark .site-footer {
+    background-color: #0b1118;
+}
+
+/* =================================
+   3. تصميم الفورم والعناصر
+   ================================= */
+form {
+  background-color: var(--form-background);
+  padding: 2.5rem;
+  border-radius: var(--border-radius);
+  box-shadow: var(--box-shadow);
+  transition: background-color var(--transition-speed);
+}
+
+.form-section {
+  margin-bottom: 2.5rem;
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: 2rem;
+}
+
+.form-section:last-of-type {
+  border-bottom: none;
+  margin-bottom: 0;
+}
+
+.form-section h2 {
+  font-size: 1.25rem;
+  color: var(--primary-color);
+  margin-top: 0;
+  margin-bottom: 1.5rem;
+  border-right: 4px solid var(--primary-color);
+  padding-right: 10px;
+}
+
+.form-group {
+  margin-bottom: 1.25rem;
 }
 
 label {
   display: block;
-  margin-top: 15px;
-  font-weight: bold;
+  margin-bottom: 0.5rem;
+  font-weight: 700;
+  font-size: 0.95rem;
 }
 
-input, textarea, select, button {
+input, textarea, select {
   width: 100%;
-  padding: 10px;
-  margin-top: 8px;
-  border: 1px solid #ccc;
+  padding: 12px 15px;
+  border: 1px solid var(--border-color);
   border-radius: 8px;
+  background-color: var(--background-color);
+  color: var(--text-color);
+  font-family: var(--font-family);
+  font-size: 1rem;
+  transition: border-color var(--transition-speed), box-shadow var(--transition-speed);
+}
+
+input::placeholder, textarea::placeholder {
+  color: #94a3b8;
+}
+
+input:focus, textarea:focus, select:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(0, 119, 182, 0.2);
 }
 
 textarea {
-  resize: none;
-  height: 80px;
+  resize: vertical;
+}
+
+/* =================================
+   4. تصميم الأزرار والعناصر الخاصة
+   ================================= */
+button {
+  font-family: var(--font-family);
+  font-weight: 700;
+  cursor: pointer;
+  border-radius: 8px;
+  border: none;
+  padding: 12px 20px;
+  transition: all var(--transition-speed);
 }
 
 .send-btn {
-  background: linear-gradient(90deg, #00b4d8, #0096c7);
+  width: 100%;
+  background-color: var(--primary-color);
   color: white;
-  font-size: 16px;
-  margin-top: 20px;
-  cursor: pointer;
-  transition: 0.3s;
+  font-size: 1.1rem;
+  padding: 15px;
+  margin-top: 1rem;
 }
 
 .send-btn:hover {
-  background: linear-gradient(90deg, #0096c7, #0077b6);
+  background-color: #005f8b;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(0, 119, 182, 0.3);
 }
 
-#map {
-  height: 300px;
-  border-radius: 10px;
-  margin-top: 10px;
-}
-
-button#locateBtn {
-  background: #2a9d8f;
+.locate-btn {
+  width: 100%;
+  background-color: var(--success-color);
   color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
   margin-top: 10px;
+}
+
+.locate-btn:hover {
+  background-color: #218a7e;
+}
+
+.dark-mode-toggle {
+  background-color: var(--border-color);
+  color: var(--text-color);
+  border: none;
+  width: 45px;
+  height: 45px;
+  font-size: 1.25rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.dark-mode-toggle:hover {
+    background-color: #cddaec;
+}
+
+body.dark .dark-mode-toggle:hover {
+    background-color: #445671;
+}
+
+/* =================================
+   5. تصميم الخريطة والصور
+   ================================= */
+#map {
+  height: 350px;
+  border-radius: var(--border-radius);
+  margin-top: 10px;
+  border: 1px solid var(--border-color);
 }
 
 .image-preview {
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
-  margin-top: 10px;
+  margin-top: 15px;
 }
 
 .image-preview img {
-  width: 80px;
-  height: 80px;
+  width: 100px;
+  height: 100px;
   object-fit: cover;
-  border-radius: 8px;
-  border: 1px solid #ccc;
+  border-radius: var(--border-radius);
+  border: 2px solid var(--border-color);
 }
 
-/* الوضع الليلي */
-body.dark {
-  background: #121212;
-  color: white;
-}
-
-body.dark .container {
-  background: #1e1e1e;
-  color: white;
-}
-
-.dark-toggle {
-  position: fixed;
-  top: 10px;
-  left: 10px;
-  background: #333;
-  color: white;
-  border: none;
-  width: 35px;
-  height: 35px;
-  font-size: 18px;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-/* مودال */
+/* =================================
+   6. تصميم مودال الإشعار
+   ================================= */
 .modal {
-  display: none;
+  display: none; /* يتم التحكم به بالجافاسكريبت */
   position: fixed;
+  z-index: 1000;
   top: 0; left: 0;
   width: 100%; height: 100%;
-  background: rgba(0,0,0,0.6);
-  display: flex;
+  background: rgba(18, 24, 31, 0.7);
+  backdrop-filter: blur(5px);
   align-items: center;
   justify-content: center;
 }
 
 .modal-content {
-  background: white;
-  padding: 20px;
-  border-radius: 12px;
+  background: var(--form-background);
+  padding: 2rem;
+  border-radius: var(--border-radius);
   text-align: center;
-  width: 300px;
+  width: 90%;
+  max-width: 400px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
 }
 
-.modal-content button {
-  background: #0077b6;
-  color: white;
-  margin-top: 10px;
+.modal-icon {
+  font-size: 3rem;
 }
 
-footer {
-  text-align: center;
-  padding: 15px;
-  margin-top: 20px;
-  background: #0077b6;
+.modal-subtext {
+  color: #64748b;
+  font-size: 0.9rem;
+}
+
+body.dark .modal-subtext {
+  color: #94a3b8;
+}
+
+.close-modal-btn {
+  background-color: var(--primary-color);
   color: white;
-  border-top-left-radius: 15px;
-  border-top-right-radius: 15px;
+  width: 100%;
+}
+
+/* =================================
+   7. تصميم متجاوب (Responsive)
+   ================================= */
+@media (max-width: 768px) {
+  .container {
+    padding: 1rem;
+  }
+  
+  .site-header h1 {
+    font-size: 1.2rem;
+  }
+
+  form {
+    padding: 1.5rem;
+  }
+
+  .form-section {
+    padding-bottom: 1.5rem;
+  }
 }
