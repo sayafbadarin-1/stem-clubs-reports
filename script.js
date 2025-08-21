@@ -1,125 +1,76 @@
-document.addEventListener('DOMContentLoaded', () => {
+// تفعيل الوضع الليلي
+document.getElementById("darkModeToggle").addEventListener("click", () => {
+  document.body.classList.toggle("dark");
+});
 
-  // --- 1. إعداد الخريطة ---
-  const map = L.map('map', { zoomControl: true });
-  let marker;
+// إعداد الخريطة
+const map = L.map("map").setView([31.95, 35.2], 8); // وسط فلسطين
+L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+  attribution: "© OpenStreetMap"
+}).addTo(map);
 
-  function setMarker(latlng) {
-    if (marker) {
-      marker.remove();
-    }
-    marker = L.marker(latlng).addTo(map)
-      .bindPopup('<b>الموقع المحدد</b>')
-      .openPopup();
-  }
+// إضافة أزرار تكبير/تصغير
+L.control.zoom({
+  position: 'bottomright'
+}).addTo(map);
 
-  map.on('click', (e) => setMarker(e.latlng));
+let marker;
+map.on("click", function(e) {
+  if (marker) map.removeLayer(marker);
+  marker = L.marker(e.latlng).addTo(map);
+});
 
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: '&copy; OpenStreetMap contributors'
-  }).addTo(map);
-
+// زر "استخدم موقعي"
+document.getElementById("locateBtn").addEventListener("click", () => {
   if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        const userLocation = [position.coords.latitude, position.coords.longitude];
-        map.setView(userLocation, 13);
-        setMarker(userLocation);
-      },
-      () => {
-        map.setView([31.95, 35.2], 8); // فلسطين
-      }
-    );
-  } else {
-    map.setView([31.95, 35.2], 8);
-  }
-
-
-  // --- 2. زر الوضع الليلي ---
-  const toggleDarkModeBtn = document.getElementById("toggleDarkMode");
-  toggleDarkModeBtn.onclick = function() {
-    document.body.classList.toggle("dark-mode");
-    if (document.body.classList.contains("dark-mode")) {
-      toggleDarkModeBtn.textContent = "☀️";
-    } else {
-      toggleDarkModeBtn.textContent = "🌙";
-    }
-  };
-
-
-  // --- 3. مودال الإرسال وتجربة المستخدم ---
-  const form = document.getElementById("problemForm");
-  const modal = document.getElementById("successModal");
-  const closeModalBtn = document.getElementById("closeModal");
-  const submitButton = form.querySelector('button[type="submit"]');
-
-  form.addEventListener("submit", function(e) {
-    e.preventDefault();
-    submitButton.disabled = true;
-    submitButton.textContent = "جاري الإرسال...";
-    setTimeout(() => {
-      modal.style.display = "flex";
-    }, 1000);
-  });
-
-  closeModalBtn.addEventListener("click", function() {
-    modal.style.display = "none";
-    submitButton.disabled = false;
-    submitButton.textContent = "📨 إرسال البلاغ";
-    form.reset();
-    imagePreview.innerHTML = '';
-    uploadedFiles = [];
-    problemType.dispatchEvent(new Event('change'));
-  });
-
-
-  // --- 4. معاينة الصور المرفوعة مع إمكانية الحذف ---
-  const imageInput = document.getElementById("imageInput");
-  const imagePreview = document.getElementById("imagePreview");
-  let uploadedFiles = [];
-
-  imageInput.addEventListener("change", function() {
-    const files = Array.from(this.files);
-    files.forEach(file => {
-      if (file && file.type.startsWith('image/')) {
-        uploadedFiles.push(file);
-
-        const reader = new FileReader();
-        reader.onload = function(e) {
-          const wrapper = document.createElement('div');
-          wrapper.classList.add('image-preview-item');
-          const img = document.createElement("img");
-          img.src = e.target.result;
-          const removeBtn = document.createElement('button');
-          removeBtn.classList.add('remove-image-btn');
-          removeBtn.innerHTML = '&times;';
-          removeBtn.type = 'button'; // لمنع إرسال النموذج
-          removeBtn.onclick = () => {
-            wrapper.remove();
-            uploadedFiles = uploadedFiles.filter(f => f !== file);
-          };
-
-          wrapper.appendChild(img);
-  wrapper.appendChild(removeBtn);
-          imagePreview.appendChild(wrapper);
-        }
-        reader.readAsDataURL(file);
-      }
+    navigator.geolocation.getCurrentPosition(pos => {
+      const lat = pos.coords.latitude;
+      const lng = pos.coords.longitude;
+      map.setView([lat, lng], 15);
+      if (marker) map.removeLayer(marker);
+      marker = L.marker([lat, lng]).addTo(map);
     });
-    this.value = '';
+  } else {
+    alert("المتصفح لا يدعم تحديد الموقع.");
+  }
+});
+
+// إظهار حقل "أخرى"
+const problemType = document.getElementById("problemType");
+const otherProblemContainer = document.getElementById("otherProblemContainer");
+
+problemType.addEventListener("change", function() {
+  if (this.value === "أخرى") {
+    otherProblemContainer.style.display = "block";
+  } else {
+    otherProblemContainer.style.display = "none";
+  }
+});
+
+// معاينة الصور
+const imageInput = document.getElementById("imageInput");
+const imagePreview = document.getElementById("imagePreview");
+
+imageInput.addEventListener("change", function() {
+  imagePreview.innerHTML = "";
+  Array.from(this.files).forEach(file => {
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      const img = document.createElement("img");
+      img.src = e.target.result;
+      imagePreview.appendChild(img);
+    };
+    reader.readAsDataURL(file);
   });
+});
 
+// معالجة الإرسال
+document.getElementById("reportForm").addEventListener("submit", function(e) {
+  e.preventDefault();
+  document.getElementById("modal").style.display = "flex";
+});
 
-  // --- 5. إظهار حقل "أخرى" بحركة ناعمة ---
-  const problemType = document.getElementById("problemType");
-  const otherProblemDiv = document.getElementById("otherProblemDiv");
-
-  problemType.addEventListener("change", function() {
-    if (this.value === "أخرى") {
-      otherProblemDiv.classList.add('visible');
-    } else {
-      otherProblemDiv.classList.remove('visible');
-    }
-  });
-
+// إغلاق المودال
+document.getElementById("closeModal").addEventListener("click", () => {
+  document.getElementById("modal").style.display = "none";
 });
