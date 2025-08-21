@@ -1,83 +1,72 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="ar">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>منصة إرسال بلاغ للبلدية</title>
-  
-  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
-  
   <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css">
 </head>
 <body>
+  <!-- زر الوضع الليلي -->
+  <button id="darkModeToggle" class="dark-toggle" title="الوضع الليلي">🌙</button>
 
-  <header>
-    <h1>🏛️ منصة إرسال بلاغ للبلدية</h1>
-    <button id="toggleDarkMode">🌙</button>
-  </header>
+  <div class="container">
+    <h1>منصة إرسال بلاغ للبلدية</h1>
 
-  <main>
-    <form id="problemForm">
-      <fieldset>
-        <legend>معلومات المُرسل</legend>
-        <label for="senderName">اسم المرسل:</label>
-        <input type="text" id="senderName" required>
+    <form id="reportForm">
+      <label>اسم المرسل:</label>
+      <input type="text" required>
 
-        <label for="senderPhone">رقم الهاتف:</label>
-        <input type="tel" id="senderPhone" required>
+      <label>رقم الهاتف:</label>
+      <input type="tel" required>
 
-        <label for="senderEmail">البريد الإلكتروني:</label>
-        <input type="email" id="senderEmail" required>
-      </fieldset>
+      <label>البريد الإلكتروني:</label>
+      <input type="email" required>
 
-      <fieldset>
-        <legend>تفاصيل البلاغ</legend>
-        <label for="problemType">نوع المشكلة:</label>
-        <select id="problemType" required>
-          <option value="">اختر نوع المشكلة</option>
-          <option value="انقطاع كهرباء">انقطاع كهرباء</option>
-          <option value="مشكلة مياه">مشكلة مياه</option>
-          <option value="حفريات">حفريات</option>
-          <option value="نفايات">نفايات</option>
-          <option value="أخرى">أخرى</option>
-        </select>
+      <label>نوع المشكلة:</label>
+      <select id="problemType" required>
+        <option value="كهرباء">كهرباء</option>
+        <option value="مياه">مياه</option>
+        <option value="طرق">طرق</option>
+        <option value="نفايات">نفايات</option>
+        <option value="أخرى">أخرى</option>
+      </select>
 
-        <div id="otherProblemDiv">
-          <label for="otherProblemInput">ما هي المشكلة؟</label>
-          <input type="text" id="otherProblemInput">
-        </div>
+      <!-- يظهر فقط عند اختيار "أخرى" -->
+      <div id="otherProblemContainer" style="display:none;">
+        <label>ما هي المشكلة؟</label>
+        <input type="text" id="otherProblem">
+      </div>
 
-        <label for="problemCause">ماذا تسببت المشكلة:</label>
-        <input type="text" id="problemCause" required>
+      <label>صف المشكلة:</label>
+      <textarea required></textarea>
 
-        <label for="problemDescription">وصف المشكلة:</label>
-        <textarea id="problemDescription" rows="4" required></textarea>
-      </fieldset>
+      <label>ماذا سببت المشكلة:</label>
+      <textarea required></textarea>
 
-      <fieldset>
-        <legend>المرفقات والموقع</legend>
-        <label for="imageInput">أرفق صور:</label>
-        <input type="file" accept="image/*" multiple id="imageInput" class="custom-file-input">
-        <div id="imagePreview" class="image-preview"></div>
+      <label>أرفق صور:</label>
+      <input type="file" accept="image/*" multiple id="imageInput">
+      <div id="imagePreview" class="image-preview"></div>
 
-        <label for="map">تحديد الموقع على الخريطة:</label>
-        <div id="map"></div>
-      </fieldset>
+      <label>الموقع على الخريطة:</label>
+      <div id="map"></div>
+      <button type="button" id="locateBtn">📍 استخدم موقعي</button>
 
-      <button type="submit">📨 إرسال البلاغ</button>
+      <button type="submit" class="send-btn">إرسال البلاغ</button>
     </form>
-  </main>
+  </div>
 
-  <div id="successModal" class="modal">
+  <!-- مودال الإشعار -->
+  <div id="modal" class="modal">
     <div class="modal-content">
-      <h3>✅ تم الإرسال بنجاح</h3>
-      <p>شكراً لك، سيتم مراجعة بلاغك في أقرب وقت.</p>
+      <p>✅ تم إرسال البلاغ بنجاح</p>
       <button id="closeModal">إغلاق</button>
     </div>
   </div>
 
   <footer>
-    <p>✍️ عمل د. محمد خليل دغامين & د. براء خميس أبو عواد & د. معتصم بالله خليل دغامين & د. سياف عادل الدارين</p>
+    <p>عمل : محمد خليل دغامين و براء خميس أبو عواد</p>
   </footer>
 
   <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
