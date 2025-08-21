@@ -1,75 +1,121 @@
 <!DOCTYPE html>
-<html lang="ar">
+<html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>منصة إرسال بلاغ للبلدية</title>
+  <meta name="description" content="منصة إلكترونية لإرسال البلاغات والشكاوى للبلدية لتسهيل التواصل وتحسين الخدمات العامة.">
+  <title>منصة ارسال بلاغ للبلدية</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+  
   <link rel="stylesheet" href="style.css">
-  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css">
 </head>
 <body>
-  <!-- زر الوضع الليلي -->
-  <button id="darkModeToggle" class="dark-toggle" title="الوضع الليلي">🌙</button>
 
-  <div class="container">
-    <h1>منصة إرسال بلاغ للبلدية</h1>
+  <header class="site-header">
+    <div class="container header-container">
+      <h1>منصة ارسال بلاغ للبلدية</h1>
+      <button id="darkModeToggle" class="dark-mode-toggle" title="تفعيل الوضع الداكن">🌙</button>
+    </div>
+  </header>
 
-    <form id="reportForm">
-      <label>اسم المرسل:</label>
-      <input type="text" required>
+  <main>
+    <div class="container">
+      <form id="reportForm" novalidate>
+        
+        <section class="form-section">
+          <h2>1. معلومات المُبلِّغ</h2>
+          <div class="form-group">
+            <label for="senderName">الاسم الكامل:</label>
+            <input type="text" id="senderName" name="senderName" placeholder="مثال: محمد أحمد" required>
+          </div>
 
-      <label>رقم الهاتف:</label>
-      <input type="tel" required>
+          <div class="form-group">
+            <label for="phoneNumber">رقم الهاتف:</label>
+            <input type="tel" id="phoneNumber" name="phoneNumber" placeholder="مثال: 0599123456" required>
+          </div>
 
-      <label>البريد الإلكتروني:</label>
-      <input type="email" required>
+          <div class="form-group">
+            <label for="email">البريد الإلكتروني:</label>
+            <input type="email" id="email" name="email" placeholder="مثال: user@example.com" required>
+          </div>
+        </section>
 
-      <label>نوع المشكلة:</label>
-      <select id="problemType" required>
-        <option value="كهرباء">كهرباء</option>
-        <option value="مياه">مياه</option>
-        <option value="طرق">طرق</option>
-        <option value="نفايات">نفايات</option>
-        <option value="أخرى">أخرى</option>
-      </select>
+        <section class="form-section">
+          <h2>2. تفاصيل البلاغ</h2>
+          <div class="form-group">
+            <label for="problemType">نوع المشكلة:</label>
+            <select id="problemType" name="problemType" required>
+              <option value="" disabled selected>-- اختر نوع المشكلة --</option>
+              <option value="كهرباء">انقطاع كهرباء أو عطل</option>
+              <option value="مياه">تسريب مياه أو انقطاع</option>
+              <option value="طرق">حفرة في الشارع أو مشكلة رصيف</option>
+              <option value="نفايات">تجمع نفايات</option>
+              <option value="صرف صحي">مشكلة في الصرف الصحي</option>
+              <option value="أخرى">أخرى (يرجى التحديد)</option>
+            </select>
+          </div>
 
-      <!-- يظهر فقط عند اختيار "أخرى" -->
-      <div id="otherProblemContainer" style="display:none;">
-        <label>ما هي المشكلة؟</label>
-        <input type="text" id="otherProblem">
-      </div>
+          <div id="otherProblemContainer" class="form-group" style="display:none;">
+            <label for="otherProblem">يرجى تحديد المشكلة:</label>
+            <input type="text" id="otherProblem" name="otherProblem" placeholder="مثال: إزعاج من أعمال بناء">
+          </div>
 
-      <label>صف المشكلة:</label>
-      <textarea required></textarea>
+          <div class="form-group">
+            <label for="problemDescription">وصف كامل للمشكلة:</label>
+            <textarea id="problemDescription" name="problemDescription" rows="4" placeholder="اشرح هنا ما هي المشكلة بالتفصيل..." required></textarea>
+          </div>
 
-      <label>ماذا سببت المشكلة:</label>
-      <textarea required></textarea>
+          <div class="form-group">
+            <label for="problemCause">ماذا سببت المشكلة (الضرر الناتج):</label>
+            <textarea id="problemCause" name="problemCause" rows="3" placeholder="مثال: تسببت الحفرة بأضرار في السيارة..." required></textarea>
+          </div>
 
-      <label>أرفق صور:</label>
-      <input type="file" accept="image/*" multiple id="imageInput">
-      <div id="imagePreview" class="image-preview"></div>
+        </section>
 
-      <label>الموقع على الخريطة:</label>
-      <div id="map"></div>
-      <button type="button" id="locateBtn">📍 استخدم موقعي</button>
+        <section class="form-section">
+            <h2>3. المرفقات والموقع</h2>
+            <div class="form-group">
+                <label for="imageInput">أرفق صوراً توضيحية (اختياري):</label>
+                <input type="file" id="imageInput" name="images" accept="image/*" multiple>
+                <div id="imagePreview" class="image-preview"></div>
+            </div>
 
-      <button type="submit" class="send-btn">إرسال البلاغ</button>
-    </form>
-  </div>
+            <div class="form-group">
+                <label for="map">حدد موقع المشكلة على الخريطة:</label>
+                <div id="map"></div>
+                <button type="button" id="locateBtn" class="locate-btn">
+                    <span class="icon">📍</span>
+                    <span>تحديد موقعي الحالي</span>
+                </button>
+            </div>
+        </section>
 
-  <!-- مودال الإشعار -->
+        <button type="submit" class="send-btn">إرسال البلاغ الآن</button>
+      </form>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+        <p>تصميم وتطوير: محمد خليل دغامين وبراء خميس أبو عواد | جميع الحقوق محفوظة © 2025</p>
+    </div>
+  </footer>
+
   <div id="modal" class="modal">
     <div class="modal-content">
-      <p>✅ تم إرسال البلاغ بنجاح</p>
-      <button id="closeModal">إغلاق</button>
+      <span class="modal-icon">✅</span>
+      <p>تم إرسال البلاغ بنجاح!</p>
+      <p class="modal-subtext">شكراً لك، سيتم التواصل معك قريباً.</p>
+      <button id="closeModal" class="close-modal-btn">فهمت</button>
     </div>
   </div>
 
-  <footer>
-    <p>عمل : محمد خليل دغامين و براء خميس أبو عواد</p>
-  </footer>
-
-  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
   <script src="script.js"></script>
 </body>
 </html>
